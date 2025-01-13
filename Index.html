@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VpnDz - Free VPN Services</title>
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #87CEFA, #4682B4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+        h1, h3 {
+            margin: 0;
+            text-align: center;
+        }
+
+        /* Background Animation */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            margin: 20px;
+            position: relative;
+        }
+        .dropdown button {
+            background-color: #1E90FF;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .dropdown button:hover {
+            background-color: #104E8B;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            color: black;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .dropdown.show .dropdown-content {
+            display: block;
+        }
+
+        /* VPN Button */
+        .vpn-button {
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background-color: #FF4500;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px #B22222;
+            transition: all 0.3s ease;
+        }
+        .vpn-button.active {
+            background-color: #32CD32;
+            box-shadow: 0 6px #228B22;
+        }
+        .vpn-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 3px #B22222;
+        }
+
+        /* Ad Container */
+        .ad-container {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 600px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            padding: 15px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .ad-container.active {
+            display: flex;
+        }
+        .ad-container video {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        /* Footer Info */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    
+    <div class="dropdown" id="countryDropdown">
+        <button onclick="toggleDropdown()">Select Country</button>
+        <div class="dropdown-content">
+            <a href="#">USA</a>
+            <a href="#">Canada</a>
+            <a href="#">Germany</a>
+            <a href="#">France</a>
+            <a href="#">Japan</a>
+        </div>
+    </div>
+
+    <button class="vpn-button" id="vpnToggle">Start VPN</button>
+
+    <div class="ad-container" id="adContainer">
+        <h3>Watch Ad to Activate VPN</h3>
+        <video controls>
+            <source src="your-ad-video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="footer">
+        <p>VpnDz: Your gateway to free and secure VPN services in Algeria and beyond.</p>
+    </div>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7051516369056546" crossorigin="anonymous"></script>
+    <script>
+        // Dropdown toggle
+        const dropdown = document.getElementById('countryDropdown');
+        document.addEventListener('click', (e) => {
+            if (dropdown.contains(e.target)) {
+                toggleDropdown();
+            } else {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        function toggleDropdown() {
+            dropdown.classList.toggle('show');
+        }
+
+        // VPN Button toggle and ad logic
+        const vpnButton = document.getElementById('vpnToggle');
+        const adContainer = document.getElementById('adContainer');
+        let vpnActive = false;
+
+        vpnButton.addEventListener('click', () => {
+            if (!vpnActive) {
+                adContainer.classList.add('active');
+            } else {
+                vpnActive = false;
+                vpnButton.textContent = 'Start VPN';
+                vpnButton.classList.remove('active');
+            }
+        });
+
+        const video = adContainer.querySelector('video');
+        video.addEventListener('ended', () => {
+            vpnActive = true;
+            adContainer.classList.remove('active');
+            vpnButton.textContent = 'Stop VPN';
+            vpnButton.classList.add('active');
+        });
+
+        // Background Animation
+        const canvas = document.querySelector('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray = [];
+        const numberOfParticles = 100;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 5 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function handleParticles() {
+            for (let particle of particlesArray) {
+                particle.update();
+                particle.draw();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            handleParticles();
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+    </script>
+</body>
+</html>
